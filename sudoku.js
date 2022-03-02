@@ -22,9 +22,57 @@ class Stack {
 }
 
 class Sudoku extends Stack {
-    constructor(sudoku) {
+    constructor(sudoku, level) {
         super();
-        this.sudoku = sudoku;
+        if (sudoku) this.sudoku = [...sudoku];
+        else this.generate(level);
+    }
+
+    generate(level) {
+        this.sudoku = new Array(81).fill(0);
+        for (let i = 0; i < 81; i++) {
+            const possibilities = this.getPossibilities(this.sudoku, i);
+            if (possibilities.length === 0) {
+                i = -1;
+                this.sudoku = new Array(81).fill(0);
+                continue;
+            }
+            let num = Math.floor(Math.random() * possibilities.length);
+            this.sudoku[i] = possibilities[num];
+        }
+        this.makeQuestion(level);
+    }
+
+    makeQuestion(level) {
+        let min;
+        let max;
+        switch (level) {
+            case "easy":
+                min = 10;
+                max = 15;
+                break;
+            case "medium":
+                min = 15;
+                max = 25;
+                break;
+            case "hard":
+                min = 25;
+                max = 30;
+                break;
+            default:
+                min = 30;
+                max = 50;
+        }
+
+        let emptySlots = Math.floor(Math.random() * (max - min)) + min;
+        console.log(emptySlots);
+        while (emptySlots > 0) {
+            let slot = Math.floor(Math.random() * 81);
+            if (this.sudoku[slot] !== 0) {
+                emptySlots--;
+                this.sudoku[slot] = 0;
+            }
+        }
     }
 
     rowValid(sudoku, row, num) {
@@ -111,9 +159,9 @@ class Sudoku extends Stack {
         this.stack = [];
     }
 
-    print() {
+    print(sudoku) {
         let str = "";
-        this.answer.forEach((a, i) => {
+        sudoku.forEach((a, i) => {
             if (i % 9 === 0) str = str + "\n\n";
             str = str + a + "\t";
         });
@@ -127,8 +175,12 @@ const sudoku = [
     4, 0, 7, 0, 8, 8, 0, 0, 7, 0, 3, 2, 6, 0, 0, 0, 7, 8, 0, 5, 0, 0, 4,
 ];
 
-const su = new Sudoku(sudoku);
+const su = new Sudoku(sudoku, "easy");
 
+// su.solve();
+// su.print();
+// console.log(su);
+
+su.print(su.sudoku);
 su.solve();
-su.print();
-console.log(su);
+su.print(su.answer);
