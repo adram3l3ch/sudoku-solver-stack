@@ -1,26 +1,4 @@
-class Stack {
-    constructor() {
-        this.stack = [];
-    }
-
-    push(item) {
-        this.stack.push(item);
-    }
-    popItem() {
-        this.stack.pop();
-    }
-    peak() {
-        return this.stack.at(-1);
-    }
-    update() {
-        this.stack.at(-1).current++;
-        if (this.stack.at(-1).current >= this.stack.at(-1).possibilities.length) {
-            this.popItem();
-            this.update();
-        }
-    }
-}
-
+import Stack from "./stack.js";
 class Sudoku extends Stack {
     constructor(sudoku, level) {
         super();
@@ -65,7 +43,6 @@ class Sudoku extends Stack {
         }
 
         let emptySlots = Math.floor(Math.random() * (max - min)) + min;
-        console.log(emptySlots);
         while (emptySlots > 0) {
             let slot = Math.floor(Math.random() * 81);
             if (this.sudoku[slot] !== 0) {
